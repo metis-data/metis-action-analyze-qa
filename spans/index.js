@@ -63,7 +63,7 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
       'db.operation': queryType,
       'db.statement': query,
       'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
-      'db.statement.metis.plan': plan,
+      'db.statement.metis.plan': {"Plan": JSON.stringify(plan.Plan),
       'net.peer.name': connection?.host,
       'net.peer.ip': connection?.host,
     },
