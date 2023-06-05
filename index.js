@@ -27,7 +27,7 @@ async function createTest(apiKey, backendUrl) {
   };
 
   try {
-    await axios.post(backendUrl, body, { headers });
+    await axios.post(backendUrl + '/api/tests/create', body, { headers });
   } catch (error) {
     console.error(error);
   }
