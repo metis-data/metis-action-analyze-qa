@@ -67,10 +67,10 @@ async function run() {
     */
     const metisApikey = core.getInput('metis_api_key');
     const dbConnection = {
-      database: config.database,
-      user: config.user,
-      password: config.password,
-      host: config.host,
+      database: credentials.database,
+      user: credentials.user,
+      password: credentials.password,
+      host: credentials.host,
       // ssl: config?.ssl || { rejectUnauthorized: false },
     };
 
