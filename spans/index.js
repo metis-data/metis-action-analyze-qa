@@ -63,7 +63,7 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
       'db.operation': queryType,
       'db.statement': query,
       'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
-      'db.statement.metis.plan': JSON.stringify({'Plan': plan.Plan}, null, 0),
+      'db.statement.metis.plan': JSON.stringify(plan, null, 0),
       'net.peer.name': connection?.host,
       'net.peer.ip': connection?.host,
     },
@@ -115,7 +115,7 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
   console.log(queriesAndPlans);
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
-      return await makeSpan(item.query, 'select', item.plan , connection, prName);
+      return await makeSpan(item.query, 'select', item.plan, connection, prName);
     })
   );
 
