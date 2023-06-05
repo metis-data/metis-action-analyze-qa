@@ -47,7 +47,7 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
   const startDate = new Date(timestamp).toISOString();
   const endDate = new Date(timestamp + duration).toISOString();
 
-  const vendor = 'github-action';
+  const vendor = 'metis-action-analyze-qa';
 
   // get host name
   let hostName = vendor;
@@ -127,22 +127,16 @@ async function sendMultiSpans(url, apiKey, spans) {
   return response;
 }
 
-const sendSpansFromSlowQueryLog = async (metisApikey, slowQueryLogData, connection, metisExporterUrl, metisBackendUrl) => {
+const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, metisBackendUrl) => {
   const logName = slowQueryLogData?.logFileName?.replaceAll(`'`, '') || `slow_query_log`;
 
   const spans = await Promise.all(
-    slowQueryLogData?.data.map(async (item) => {
-      const splitted = item?.message?.split('plan:');
-      const data = splitted[1];
-      if (data) {
-        const jsonStr = JSON.parse(data);
-        core.info(data);
-        return await makeSpan(jsonStr['Query Text'], 'select', { Plan: jsonStr.Plan }, connection, logName);
-      }
+    queriesAndPlans?.data.map(async (item) => {
+      return await makeSpan(item.query, 'select', { Plan: item.plan['Plan'] }, connection, logName);
     })
   );
 
   sendSpansToBackend(spans, metisApikey, metisExporterUrl, logName, metisBackendUrl);
 };
 
-module.exports = { sendSpansFromSlowQueryLog };
+module.exports = { sendSpans };

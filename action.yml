@@ -7,20 +7,24 @@ inputs:
     default: ''
   github_token:
     description: github token
-    required: true
+    required: false
     default: ''
   target_url:
     description: target url
     required: false
-    default: 'https://app.metisdata.io'
+    default: 'https://dev.metisdata.io'
   metis_exporter_url:
     description: target url
     required: false
-    default: 'https://ingest.metisdata.io'
+    default: 'https://ingest-stg.metisdata.io'
   db_connection_string:
-    description: database connection string 
+    description: database connection string
     required: true
     default: ''
+  query:
+    required: true
+    description: sql query
+    default: 'select * from  postgres_air.boarding_pass as b where passenger_id = "4484038"'
 runs:
   using: 'node16'
   main: 'index.js'

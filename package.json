@@ -1,8 +1,8 @@
 {
-  "name": "metis-slow-queries-log",
+  "name": "metis-action-analyze-qa",
   "version": "0.0.0",
   "private": true,
-  "description": "metis-slow-queries-log",
+  "description": "metis action the get as input sql queries and db connection and send the query and the execution plan to metis span-processor",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,6 +23,7 @@
     "@actions/core": "^1.10.0",
     "@metis-data/db-details": "2.5.6-beta.0",
     "axios": "^1.2.2",
+    "pg": "^8.11.0",
     "pg-connection-string": "^2.5.0",
     "pg-structure": "^7.13.1",
     "uuidv4": "^6.2.13"
