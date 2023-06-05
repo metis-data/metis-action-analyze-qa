@@ -48,45 +48,35 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     'telemetry.sdk.language': vendor,
   };
 
-  const newClientSpan = {
+  return {
+    parent_id: null,
+    name: queryType || 'REPL',
     kind: 'SpanKind.CLIENT',
-    name: 'SELECT program',
-    links: [],
-    events: [],
+    duration: 2,
+    start_time: startDate,
+    end_time: endDate,
+    attributes: {
+      'db.name': connection?.database,
+      'db.user': connection?.user,
+      'db.system': 'postgres',
+      'db.operation': queryType,
+      'db.statement': query,
+      'db.statement.metis': query + `/*traceparent=${traceId}-${span_id}*/''`,
+      'db.statement.metis.plan': /*JSON.stringify(plan)*/ "{\"Plan\":{\"Node Type\":\"Index Scan\",\"Parallel Aware\":false,\"Scan Direction\":\"Forward\",\"Index Name\":\"flight_pkey\",\"Relation Name\":\"flight\",\"Schema\":\"postgres_air\",\"Alias\":\"flight\",\"Startup Cost\":0.42,\"Total Cost\":8.44,\"Plan Rows\":1,\"Plan Width\":71,\"Output\":[\"flight_id\",\"flight_no\",\"scheduled_departure\",\"scheduled_arrival\",\"departure_airport\",\"arrival_airport\",\"status\",\"aircraft_code\",\"actual_departure\",\"actual_arrival\",\"update_ts\"],\"Index Cond\":\"(flight.flight_id = 108340)\",\"Shared Hit Blocks\":0,\"Shared Read Blocks\":0,\"Shared Dirtied Blocks\":0,\"Shared Written Blocks\":0,\"Local Hit Blocks\":0,\"Local Read Blocks\":0,\"Local Dirtied Blocks\":0,\"Local Written Blocks\":0,\"Temp Read Blocks\":0,\"Temp Written Blocks\":0,\"I/O Read Time\":0,\"I/O Write Time\":0},\"Planning\":{\"Shared Hit Blocks\":0,\"Shared Read Blocks\":0,\"Shared Dirtied Blocks\":0,\"Shared Written Blocks\":0,\"Local Hit Blocks\":0,\"Local Read Blocks\":0,\"Local Dirtied Blocks\":0,\"Local Written Blocks\":0,\"Temp Read Blocks\":0,\"Temp Written Blocks\":0,\"I/O Read Time\":0,\"I/O Write Time\":0},\"Planning Time\":0.066}",
+      'net.peer.name': connection?.host,
+      'net.peer.ip': connection?.host,
+    },
     status: {
       status_code: 'UNSET',
     },
     context: {
-      span_id: '0x2c2496FDCdA64AAa',
-      trace_id: '0xD8a6b802b0B27e88BB4BfB24ECAa6Fcf',
-      trace_state: '[]',
+      span_id: span_id,
+      trace_id: traceId,
     },
-    duration: 119,
-    end_time: '2023-06-02T18:12:49.631Z',
-    resource: {
-      'app.tag.pr': prName,
-      'host.name': 'mr-meeseeks',
-      'service.name': hostName,
-      'service.version': '1.0.0',
-      'telemetry.sdk.name': vendor,
-      'telemetry.sdk.version': '1.11.1',
-      'telemetry.sdk.language': vendor,
-    },
-    parent_id: '0xccBCaBC4Af076ABD',
-    attributes: {
-      'db.name': 'dobby is a free elf',
-      'db.system': 'postgresql',
-      'net.peer.name': 'dev.chiq.ai',
-      'db.statement.metis':
-        "SELECT departure_airport, booking_id, is_returning FROM postgres_air.booking_leg bl JOIN postgres_air.flight f USING (flight_id) WHERE departure_airport IN (SELECT airport_code FROM postgres_air.airport WHERE iso_country='US')",
-      'db.statement.metis.plan':
-        '{ "Plan": { "Node Type": "Hash Join", "Parallel Aware": false, "Join Type": "Inner", "Startup Cost": 19596.55, "Total Cost": 610393.76, "Plan Rows": 3788277, "Plan Width": 9, "Output": ["f.departure_airport", "bl.booking_id", "bl.is_returning"], "Inner Unique": false, "Hash Cond": "(bl.flight_id = f.flight_id)", "Plans": [ { "Node Type": "Seq Scan", "Parent Relationship": "Outer", "Parallel Aware": false, "Relation Name": "booking_leg", "Schema": "postgres_air", "Alias": "bl", "Startup Cost": 0.00, "Total Cost": 310506.66, "Plan Rows": 17893566, "Plan Width": 9, "Output": ["bl.booking_id", "bl.is_returning", "bl.flight_id"] }, { "Node Type": "Hash", "Parent Relationship": "Inner", "Parallel Aware": false, "Startup Cost": 17223.60, "Total Cost": 17223.60, "Plan Rows": 144636, "Plan Width": 8, "Output": ["f.departure_airport", "f.flight_id"], "Plans": [ { "Node Type": "Hash Join", "Parent Relationship": "Outer", "Parallel Aware": false, "Join Type": "Inner", "Startup Cost": 20.09, "Total Cost": 17223.60, "Plan Rows": 144636, "Plan Width": 8, "Output": ["f.departure_airport", "f.flight_id"], "Inner Unique": true, "Hash Cond": "(f.departure_airport = airport.airport_code)", "Plans": [ { "Node Type": "Seq Scan", "Parent Relationship": "Outer", "Parallel Aware": false, "Relation Name": "flight", "Schema": "postgres_air", "Alias": "f", "Startup Cost": 0.00, "Total Cost": 15398.76, "Plan Rows": 683176, "Plan Width": 8, "Output": ["f.flight_id", "f.flight_no", "f.scheduled_departure", "f.scheduled_arrival", "f.departure_airport", "f.arrival_airport", "f.status", "f.aircraft_code", "f.actual_departure", "f.actual_arrival", "f.update_ts"] }, { "Node Type": "Hash", "Parent Relationship": "Inner", "Parallel Aware": false, "Startup Cost": 18.33, "Total Cost": 18.33, "Plan Rows": 141, "Plan Width": 4, "Output": ["airport.airport_code"], "Plans": [ { "Node Type": "Seq Scan", "Parent Relationship": "Outer", "Parallel Aware": false, "Relation Name": "airport", "Schema": "postgres_air", "Alias": "airport", "Startup Cost": 0.00, "Total Cost": 18.33, "Plan Rows": 141, "Plan Width": 4, "Output": ["airport.airport_code"], "Filter": "(airport.iso_country = \'US\'::text)" } ] } ] } ] } ] } }',
-    },
-    start_time: '2023-06-02T18:12:49.512Z',
+    resource,
   };
-
-  return newClientSpan;
 };
+
 
 const axiosPost = async (url, body, options) => {
   try {
