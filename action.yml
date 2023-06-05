@@ -14,7 +14,7 @@ inputs:
     required: false
     default: 'https://dev.metisdata.io'
   metis_exporter_url:
-    description: target url
+    description: exporter url
     required: false
     default: 'https://ingest-stg.metisdata.io'
   db_connection_string:

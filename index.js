@@ -14,7 +14,7 @@ let queries = [
   "SELECT flight_id, scheduled_departure FROM postgres_air.flight f JOIN postgres_air.airport a ON departure_airport=airport_code AND iso_country='US'",
 ];
 
-async function createTest(apiKey) {
+async function createTest(apiKey, backendUrl) {
   const body = {
     prName: `Metis-Queries-Performance-QA-${Date().split(' GMT')[0]}`,
     prId: 'noPrId',
@@ -74,7 +74,7 @@ async function run() {
       // ssl: config?.ssl || { rejectUnauthorized: false },
     };
 
-    createTest(metisApikey);
+    createTest(metisApikey, core.getInput('target_url'));
     const client = await createNewClient(dbConnection);
     await connectClient(client);
 
