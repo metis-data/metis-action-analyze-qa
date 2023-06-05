@@ -66,6 +66,7 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     start_time: '2023-06-05T14:56:50.533Z',
     duration: 1,
     resource: {
+      'app.tag.pr': prName,
       'service.name': 'api-service',
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
       'metis.sdk.name': 'query-analysis',
