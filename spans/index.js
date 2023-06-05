@@ -40,7 +40,7 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
   } catch (e) {}
 
   const resource = {
-    'metis.sdk.name': prName,
+    'app.tag.pr': prName,
     'service.name': hostName,
     'service.version': 'or0.000000000000001%',
     'telemetry.sdk.name': vendor,
@@ -52,7 +52,8 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     parent_id: null,
     name: queryType || 'REPL',
     kind: 'SpanKind.CLIENT',
-    duration: 2,
+    timestamp: Date.now(),
+    duration: duration,
     start_time: startDate,
     end_time: endDate,
     attributes: {
@@ -76,7 +77,6 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     resource,
   };
 };
-
 
 const axiosPost = async (url, body, options) => {
   try {
