@@ -41,15 +41,6 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     hostName = connection.host;
   } catch (e) {}
 
-  const resource = {
-    'app.tag.pr': prName,
-    'service.name': hostName,
-    'service.version': 'or0.000000000000001%',
-    'telemetry.sdk.name': vendor,
-    'telemetry.sdk.version': 'or0.000000000000000000000000001%',
-    'telemetry.sdk.language': vendor,
-  };
-
   return {
     kind: 'SpanKind.CLIENT',
     name: 'SELECT postgres',

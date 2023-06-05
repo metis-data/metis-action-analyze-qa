@@ -15,7 +15,7 @@ let queries = [
 ];
 
 //const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
-const prName = `Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25`;
+const prName = `Metis-Queries-Performance-QA`;
 
 async function createTest(apiKey, backendUrl) {
   const body = {
