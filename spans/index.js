@@ -52,8 +52,7 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     parent_id: null,
     name: queryType || 'REPL',
     kind: 'SpanKind.CLIENT',
-    timestamp: Date.now(),
-    duration: duration,
+    duration: 2,
     start_time: startDate,
     end_time: endDate,
     attributes: {
