@@ -14,9 +14,11 @@ let queries = [
   "SELECT flight_id, scheduled_departure FROM postgres_air.flight f JOIN postgres_air.airport a ON departure_airport=airport_code AND iso_country='US'",
 ];
 
+const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0]}`
+
 async function createTest(apiKey, backendUrl) {
   const body = {
-    prName: `Metis-Queries-Performance-QA-${Date().split(' GMT')[0]}`,
+    prName: prName,
     prId: 'noPrId',
     prUrl: 'noPrUrl',
   };
@@ -87,7 +89,7 @@ async function run() {
 
     endClient(client);
 
-    await sendSpans(metisApikey, analyzedQueries, dbConnection, core.getInput('metis_exporter_url'), core.getInput('target_url'));
+    await sendSpans(metisApikey, analyzedQueries, dbConnection, core.getInput('metis_exporter_url'), core.getInput('target_url'), prName);
   } catch (error) {
     console.error(error);
     core.setFailed(error);

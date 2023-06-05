@@ -2,7 +2,7 @@ const axios = require('axios');
 const { uuid } = require('uuidv4');
 const core = require('@actions/core');
 
-const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFileName, metisBackendUrl) => {
+const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, metisBackendUrl, prName) => {
   try {
     if (queriesToSend === 0) {
       console.log('No Spans To Send');
@@ -15,7 +15,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, logFi
     core.info(queriesToSend.length);
     core.info(`queries to send`);
     const data = {
-      prName: logFileName,
+      prName: prName,
       prId: 'no-set',
       prUrl: 'no-set',
     };
@@ -127,15 +127,14 @@ async function sendMultiSpans(url, apiKey, spans) {
   return response;
 }
 
-const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, metisBackendUrl) => {
- 
+const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, metisBackendUrl, prName) => {
   const spans = await Promise.all(
     queriesAndPlans?.data.map(async (item) => {
       return await makeSpan(item.query, 'select', { Plan: item.plan['Plan'] }, connection, logName);
     })
   );
 
-  sendSpansToBackend(spans, metisApikey, metisExporterUrl, logName, metisBackendUrl);
+  sendSpansToBackend(spans, metisApikey, metisExporterUrl, metisBackendUrl, prName);
 };
 
 module.exports = { sendSpans };
