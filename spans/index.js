@@ -30,7 +30,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, metis
       },
     };
     await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
-
+   
     await sendMultiSpans(metisExporterUrl, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
