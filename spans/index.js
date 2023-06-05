@@ -64,13 +64,13 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
     duration: 119,
     end_time: '2023-06-02T18:12:49.631Z',
     resource: {
-      'app.tag.pr': '0xe2aA3A',
+      'app.tag.pr': prName,
       'host.name': 'mr-meeseeks',
-      'service.name': 'billing',
+      'service.name': hostName,
       'service.version': '1.0.0',
-      'telemetry.sdk.name': 'opentelemetry',
+      'telemetry.sdk.name': vendor,
       'telemetry.sdk.version': '1.11.1',
-      'telemetry.sdk.language': 'python',
+      'telemetry.sdk.language': vendor,
     },
     parent_id: '0xccBCaBC4Af076ABD',
     attributes: {
