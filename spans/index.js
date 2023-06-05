@@ -69,7 +69,7 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
       'app.tag.pr': prName,
       'service.name': hostName,
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
-      'metis.sdk.name': 'query-analysis',
+      'metis.sdk.name': prName,
       'telemetry.sdk.name': 'query-analysis',
       'telemetry.sdk.version': '1.11.1',
       'telemetry.sdk.language': 'query-analysis',
