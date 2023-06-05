@@ -14,7 +14,8 @@ let queries = [
   "SELECT flight_id, scheduled_departure FROM postgres_air.flight f JOIN postgres_air.airport a ON departure_airport=airport_code AND iso_country='US'",
 ];
 
-const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
+//const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
+const prName = `Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25`;
 
 async function createTest(apiKey, backendUrl) {
   const body = {
