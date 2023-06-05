@@ -89,7 +89,7 @@ async function run() {
 
     endClient(client);
 
-    await sendSpans(metisApikey, analyzedQueries, dbConnection, core.getInput('metis_exporter_url'), core.getInput('target_url'), prName);
+    await sendSpans(metisApikey, analyzedQueries, dbConnection, core.getInput('metis_exporter_url'), prName);
   } catch (error) {
     console.error(error);
     core.setFailed(error);

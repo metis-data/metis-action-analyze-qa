@@ -2,7 +2,7 @@ const axios = require('axios');
 const { uuid } = require('uuidv4');
 const core = require('@actions/core');
 
-const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, metisBackendUrl, prName) => {
+const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
   try {
     if (queriesToSend === 0) {
       console.log('No Spans To Send');
@@ -14,30 +14,14 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl, metis
     core.info(`queries to send`);
     core.info(queriesToSend.length);
     core.info(`queries to send`);
-    const data = {
-      prName: prName,
-      prId: 'no-set',
-      prUrl: 'no-set',
-    };
-
-    const options = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Content-Length': JSON.stringify(data).length,
-        'x-api-key': apiKey,
-      },
-    };
-    await axiosPost(`${metisBackendUrl}/api/tests/create`, JSON.stringify(data), options);
-   
+  
     await sendMultiSpans(metisExporterUrl, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
   }
 };
 
-const makeSpan = async (query, queryType, plan, connection, logFileName) => {
+const makeSpan = async (query, queryType, plan, connection, prName) => {
   const span_id = uuid();
   const traceId = uuid();
 
@@ -56,7 +40,7 @@ const makeSpan = async (query, queryType, plan, connection, logFileName) => {
   } catch (e) {}
 
   const resource = {
-    'app.tag.pr': logFileName,
+    'app.tag.pr': prName,
     'service.name': hostName,
     'service.version': 'or0.000000000000001%',
     'telemetry.sdk.name': vendor,
@@ -103,7 +87,7 @@ const axiosPost = async (url, body, options) => {
   }
 };
 
-async function sendMultiSpans(url, apiKey, spans) {
+async function sendMultiSpans(url, apiKey, spans, prName) {
   core.info(`spans length : ${spans.length}`);
   const spansString = spans.map((d) => d && JSON.stringify(d, null, 0));
   const response = [];
@@ -127,14 +111,14 @@ async function sendMultiSpans(url, apiKey, spans) {
   return response;
 }
 
-const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, metisBackendUrl, prName) => {
+const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName) => {
   const spans = await Promise.all(
     queriesAndPlans?.data.map(async (item) => {
-      return await makeSpan(item.query, 'select', { Plan: item.plan['Plan'] }, connection, logName);
+      return await makeSpan(item.query, 'select', { Plan: item.plan['Plan'] }, connection, prName);
     })
   );
 
-  sendSpansToBackend(spans, metisApikey, metisExporterUrl, metisBackendUrl, prName);
+  sendSpansToBackend(spans, metisApikey, metisExporterUrl);
 };
 
 module.exports = { sendSpans };
