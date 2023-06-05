@@ -112,7 +112,7 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 }
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName) => {
-  console.log(queriesAndPlans);
+  console.log(JSON.stringify(queriesAndPlans[0].plan));
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
       return await makeSpan(item.query, 'select', item.plan, connection, prName);
