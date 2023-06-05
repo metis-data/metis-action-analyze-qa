@@ -7,6 +7,7 @@ const { sendSpans } = require('./spans');
 
 let queries = [
   'select * from  postgres_air.boarding_pass as b where passenger_id = 4484038',
+  `SELECT * FROM postgres_air.boarding_pass WHERE pass_id BETWEEN 10450000 AND 10800000 AND seat = '20C' Limit 50000`,
   "SELECT * FROM postgres_air.account WHERE last_name = 'johns'",
   "/* DESC: A simple query on one table. It scans the entire table as there are no relevant index. Rows Returned: 66 Rows Filtered: ~257,268 Rows Read = ~257,268 + 66 = ~257,334 Plan Type: Actual */ SELECT * FROM postgres_air.account WHERE last_name = 'johns'",
   "SELECT * FROM postgres_air.account WHERE last_name = 'johns' limit 15",
@@ -14,8 +15,8 @@ let queries = [
   "SELECT flight_id, scheduled_departure FROM postgres_air.flight f JOIN postgres_air.airport a ON departure_airport=airport_code AND iso_country='US'",
 ];
 
-//const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
-const prName = `Metis-Queries-Performance-QA`;
+const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
+//const prName = `Metis-Queries-Performance-QA`;
 
 async function createTest(apiKey, backendUrl) {
   const body = {

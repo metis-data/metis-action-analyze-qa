@@ -42,40 +42,6 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
   } catch (e) {}
 
   return {
-    "kind": "SpanKind.CLIENT",
-    "name": "SELECT postgres",
-    "links": [],
-    "events": [],
-    "status": {
-      "status_code": "UNSET"
-    },
-    "context": {
-      "span_id": span_id,
-      "trace_id": traceId
-    },
-    "end_time": "2023-06-05T14:56:50.534Z",
-    "start_time": "2023-06-05T14:56:50.533Z",
-    "duration": 1,
-    "resource": {
-      "service.name": "api-service",
-      "metis.sdk.version": "67dee834d8b7eb0433640d45718759992dde0bb4",
-      "metis.sdk.name": 'Metis-Queries-Performance-QA',
-      "telemetry.sdk.name": "Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25",
-      "telemetry.sdk.version": "1.11.1",
-      "telemetry.sdk.language": "query-analysis",
-      "app.tag.pr": 'Metis-Queries-Performance-QA'
-    },
-    "parent_id": null,
-    "attributes": {
-      "db.system": "postgresql",
-      "db.statement.metis": query,
-      "net.peer.name": "127.0.0.1",
-      "net.peer.port": 5432,
-      "db.statement.metis.plan": parsedPlan
-    }
-  }
-
-  return {
     kind: 'SpanKind.CLIENT',
     name: 'SELECT postgres',
     links: [],
@@ -84,20 +50,20 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
       status_code: 'UNSET',
     },
     context: {
-      span_id: 'af1b5325-6fdd-4d91-a5f7-212fc7c7e9e2',
-      trace_id: 'f65205e5-f831-4af1-9d1b-4f809c7bef1e',
+      span_id: span_id,
+      trace_id: traceId,
     },
     end_time: '2023-06-05T14:56:50.534Z',
     start_time: '2023-06-05T14:56:50.533Z',
     duration: 1,
     resource: {
-      'app.tag.pr': prName,
-      'service.name': hostName,
+      'service.name': 'api-service',
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
       'metis.sdk.name': prName,
-      'telemetry.sdk.name': 'query-analysis',
+      'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
       'telemetry.sdk.version': '1.11.1',
       'telemetry.sdk.language': 'query-analysis',
+      'app.tag.pr': prName,
     },
     parent_id: null,
     attributes: {
