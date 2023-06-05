@@ -14,7 +14,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
     core.info(`queries to send`);
     core.info(queriesToSend.length);
     core.info(`queries to send`);
-  
+
     await sendMultiSpans(metisExporterUrl, apiKey, queriesToSend);
   } catch (error) {
     console.error(error);
@@ -112,6 +112,7 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 }
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName) => {
+  console.log(queriesAndPlans);
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
       return await makeSpan(item.query, 'select', { Plan: item.plan['Plan'] }, connection, prName);
