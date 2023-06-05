@@ -115,7 +115,7 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
   console.log(queriesAndPlans);
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
-      return await makeSpan(item.query, 'select', { Plan: item.plan }, connection, prName);
+      return await makeSpan(item.query, 'select', item.plan , connection, prName);
     })
   );
 
