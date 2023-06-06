@@ -21,10 +21,10 @@ inputs:
     description: database connection string
     required: true
     default: ''
-  query:
-    required: true
-    description: sql query
-    default: 'select * from  postgres_air.boarding_pass as b where passenger_id = "4484038"'
+  queries:
+    required: false
+    description: sql queries
+    default: '[]'
 runs:
   using: 'node16'
   main: 'index.js'

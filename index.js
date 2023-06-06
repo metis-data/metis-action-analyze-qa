@@ -61,6 +61,13 @@ async function endClient(client) {
 
 async function run() {
   try {
+    let inputQueries = [];
+    /*
+      Get Input Queries If Exists
+    */
+    if (core.getInput('queries') && core.getInput('queries') !== '[]') {
+      inputQueries = JSON.parse(core.getInput('queries'));
+    }
     /*
       Parse connection string to object
     */
@@ -83,7 +90,7 @@ async function run() {
     await connectClient(client);
 
     const analyzedQueries = await Promise.all(
-      queries.map(async (query) => {
+      inputQueries.map(async (query) => {
         const res = await getQueryAndPlan(client, query);
         return res;
       })
