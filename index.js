@@ -66,7 +66,7 @@ async function run() {
       Get Input Queries If Exists
     */
     if (core.getInput('queries') && core.getInput('queries') !== '[]') {
-      inputQueries = JSON.parse(core.getInput('queries'));
+      inputQueries = JSON.parse(core.getInput('queries')).map((item) => item.query);
     }
     /*
       Parse connection string to object
