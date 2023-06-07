@@ -21,7 +21,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
   }
 };
 
-const generateServerSpan = (traceId, routeName) => {
+const generateServerSpan = (traceId, routeName, prName) => {
   const span_id = uuid();
   return {
     kind: 'SpanKind.SERVER',
@@ -39,7 +39,7 @@ const generateServerSpan = (traceId, routeName) => {
     duration: 880,
     end_time: '2023-06-03T19:45:02.325Z',
     resource: {
-      'app.tag.pr': '0xe2aA3A',
+      'app.tag.pr': prName,
       'host.name': 'legal-erection.net',
       'service.name': 'notification',
       'service.version': '6.0.9',
@@ -166,7 +166,7 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
     queriesAndPlans?.map(async (item) => {
       const traceId = uuid();
       if (useRoute || true) {
-        arr.push(generateServerSpan(traceId, item?.route));
+        arr.push(generateServerSpan(traceId, item?.route, prName));
       }
       return await makeSpan(item, 'select', connection, prName, traceId);
     })
