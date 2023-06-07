@@ -163,18 +163,18 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute) => {
   console.log(JSON.stringify(prName));
-
+  let arr = [];
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
       const traceId = uuid();
       if (useRoute || true) {
-        generateServerSpan(traceId, item?.route);
+        arr.push(generateServerSpan(traceId, item?.route));
       }
       return await makeSpan(item, 'select', connection, prName, traceId);
     })
   );
 
-  sendSpansToBackend(spans, metisApikey, metisExporterUrl);
+  sendSpansToBackend([...arr, ...spans], metisApikey, metisExporterUrl);
 };
 
 module.exports = { sendSpans };
