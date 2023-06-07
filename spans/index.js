@@ -93,46 +93,48 @@ const makeSpan = async (item, queryType, connection, prName) => {
   } catch (e) {}
   // generateServerSpan(traceId, item.route),
   return {
-      kind: 'SpanKind.CLIENT',
-      name: 'SELECT postgres',
-      links: [],
-      events: [],
-      status: {
-        status_code: 'UNSET',
-      },
-      context: {
-        span_id: span_id,
-        trace_id: traceId,
-      },
-      end_time: endDate,
-      start_time: startDate,
-      duration: 1,
-      resource: {
-        'service.name': 'api-service',
-        'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
-        'metis.sdk.name': prName,
-        'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
-        'telemetry.sdk.version': '1.11.1',
-        'telemetry.sdk.language': 'query-analysis',
-        'app.tag.pr': prName,
-      },
-      parent_id: null,
-      attributes: {
-        'db.system': 'postgresql',
-        'db.statement.metis': item.query,
-        'net.peer.name': '127.0.0.1',
-        'net.peer.port': 5432,
-        'db.statement.metis.plan': parsedPlan,
-      },
-    }
+    kind: 'SpanKind.CLIENT',
+    name: 'SELECT postgres',
+    links: [],
+    events: [],
+    status: {
+      status_code: 'UNSET',
+    },
+    context: {
+      span_id: span_id,
+      trace_id: traceId,
+    },
+    end_time: endDate,
+    start_time: startDate,
+    duration: 1,
+    resource: {
+      'service.name': 'api-service',
+      'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
+      'metis.sdk.name': prName,
+      'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
+      'telemetry.sdk.version': '1.11.1',
+      'telemetry.sdk.language': 'query-analysis',
+      'app.tag.pr': prName,
+    },
+    parent_id: null,
+    attributes: {
+      'db.system': 'postgresql',
+      'db.statement.metis': item.query,
+      'net.peer.name': '127.0.0.1',
+      'net.peer.port': 5432,
+      'db.statement.metis.plan': parsedPlan,
+    },
+  };
 };
 
 const axiosPost = async (url, body, options) => {
   try {
     const res = await axios.post(url, body, options);
+    core.info(`send span to backend successfully`);
     return res;
   } catch (error) {
     console.log(error);
+    core.info(`failed to send span`);
   }
 };
 
