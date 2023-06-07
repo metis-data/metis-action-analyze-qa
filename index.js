@@ -39,7 +39,7 @@ async function getQueryAndPlan(client, query) {
   const explainedQuery = 'EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, TIMING, FORMAT JSON) ' + query;
   const explainedQueryResult = await client.query(explainedQuery);
   const plan = explainedQueryResult.rows[0]['QUERY PLAN'][0];
-
+  core.info(`Run query: ${query}`);
   return {
     query,
     plan,
