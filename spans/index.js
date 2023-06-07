@@ -72,9 +72,8 @@ const generateServerSpan = (traceId, routeName) => {
   };
 };
 
-const makeSpan = async (item, queryType, connection, prName) => {
+const makeSpan = async (item, queryType, connection, prName, traceId) => {
   const span_id = uuid();
-  const traceId = uuid();
 
   const duration = (item.plan && item.plan['Execution Time']) || 1;
 
@@ -162,12 +161,16 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
   return response;
 }
 
-const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName) => {
+const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute) => {
   console.log(JSON.stringify(prName));
 
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
-      return await makeSpan(item, 'select', connection, prName);
+      const traceId = uuid();
+      if (useRoute === 'true') {
+        generateServerSpan(traceId, item?.route);
+      }
+      return await makeSpan(item, 'select', connection, prName, traceId);
     })
   );
 

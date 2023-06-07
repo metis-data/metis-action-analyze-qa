@@ -104,7 +104,7 @@ async function run() {
 
     endClient(client);
 
-    await sendSpans(metisApikey, queriesToBeAnalyzed, dbConnection, core.getInput('metis_exporter_url'), prName);
+    await sendSpans(metisApikey, queriesToBeAnalyzed, dbConnection, core.getInput('metis_exporter_url'), prName, core.getInput('useRoute'));
   } catch (error) {
     console.error(error);
     core.setFailed(error);

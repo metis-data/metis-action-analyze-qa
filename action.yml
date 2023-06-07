@@ -25,6 +25,10 @@ inputs:
     required: false
     description: sql queries
     default: '[]'
+  useRoute:
+    required: false
+    description: flag that choose if to use route
+    default: 'false'
 runs:
   using: 'node16'
   main: 'index.js'
