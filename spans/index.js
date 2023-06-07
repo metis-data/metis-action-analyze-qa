@@ -51,11 +51,11 @@ const generateServerSpan = (traceId, routeName, prName) => {
     attributes: {
       'http.url': 'http://exemplary-slider.name',
       'http.host': 'test:None',
-      'http.route': '/v1/Buckinghamshire/Kansas/',
+      'http.route': routeName,
       'http.flavor': '1.1',
       'http.method': 'POST',
       'http.scheme': 'http',
-      'http.target': '/v1/Buckinghamshire/Kansas/',
+      'http.target': routeName,
       'net.peer.ip': '127.0.0.1',
       'net.peer.port': 123,
       'net.host.name': 'localhost',
