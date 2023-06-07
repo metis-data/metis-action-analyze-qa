@@ -173,7 +173,7 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
       return await makeSpan(item, 'select', connection, prName, traceId);
     })
   );
-
+  core.info(JSON.stringify(arr));
   sendSpansToBackend([...arr, ...spans], metisApikey, metisExporterUrl);
 };
 

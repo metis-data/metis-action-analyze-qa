@@ -99,7 +99,6 @@ async function run() {
         };
       })
     );
-
     const queriesToBeAnalyzed = [...actualAnalyzedQueries, ...estimatedAnalyzedQueries];
 
     endClient(client);
