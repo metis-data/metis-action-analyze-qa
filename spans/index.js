@@ -21,11 +21,62 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
   }
 };
 
-const makeSpan = async (query, queryType, plan, connection, prName) => {
+const generateServerSpan = (traceId, routeName) => {
+  const span_id = uuid();
+  return {
+    server_span: {
+      kind: 'SpanKind.SERVER',
+      name: routeName,
+      links: [],
+      events: [],
+      status: {
+        status_code: 'UNSET',
+      },
+      context: {
+        span_id: span_id,
+        trace_id: traceId,
+        trace_state: '[]',
+      },
+      duration: 880,
+      end_time: '2023-06-03T19:45:02.325Z',
+      resource: {
+        'app.tag.pr': '0xe2aA3A',
+        'host.name': 'legal-erection.net',
+        'service.name': 'notification',
+        'service.version': '6.0.9',
+        'telemetry.sdk.name': 'opentelemetry',
+        'telemetry.sdk.version': '1.11.1',
+        'telemetry.sdk.language': 'python',
+      },
+      parent_id: null,
+      attributes: {
+        'http.url': 'http://exemplary-slider.name',
+        'http.host': 'test:None',
+        'http.route': '/v1/Buckinghamshire/Kansas/',
+        'http.flavor': '1.1',
+        'http.method': 'POST',
+        'http.scheme': 'http',
+        'http.target': '/v1/Buckinghamshire/Kansas/',
+        'net.peer.ip': '127.0.0.1',
+        'net.peer.port': 123,
+        'net.host.name': 'localhost',
+        'track.by.metis': true,
+        'http.user_agent': 'python-httpx/0.21.3',
+        'http.server_name': 'test',
+        'http.status_code': 201,
+        'http.response.header.content_type': ['application/json'],
+        'http.response.header.content_length': ['2'],
+      },
+      start_time: '2023-06-03T19:45:01.445Z',
+    },
+  };
+};
+
+const makeSpan = async (item, queryType, connection, prName) => {
   const span_id = uuid();
   const traceId = uuid();
 
-  const duration = (plan && plan['Execution Time']) || 1;
+  const duration = (item.plan && item.plan['Execution Time']) || 1;
 
   const timestamp = Date.now();
   const startDate = new Date(timestamp).toISOString();
@@ -33,47 +84,47 @@ const makeSpan = async (query, queryType, plan, connection, prName) => {
 
   const vendor = 'metis-action-analyze-qa';
 
-  const parsedPlan = JSON.stringify(plan);
+  const parsedPlan = JSON.stringify(item.plan);
 
   // get host name
   let hostName = vendor;
   try {
     hostName = connection.host;
   } catch (e) {}
-
+  // generateServerSpan(traceId, item.route),
   return {
-    kind: 'SpanKind.CLIENT',
-    name: 'SELECT postgres',
-    links: [],
-    events: [],
-    status: {
-      status_code: 'UNSET',
-    },
-    context: {
-      span_id: span_id,
-      trace_id: traceId,
-    },
-    end_time: '2023-06-05T14:56:50.534Z',
-    start_time: '2023-06-05T14:56:50.533Z',
-    duration: 1,
-    resource: {
-      'service.name': 'api-service',
-      'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
-      'metis.sdk.name': prName,
-      'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
-      'telemetry.sdk.version': '1.11.1',
-      'telemetry.sdk.language': 'query-analysis',
-      'app.tag.pr': prName,
-    },
-    parent_id: null,
-    attributes: {
-      'db.system': 'postgresql',
-      'db.statement.metis': query,
-      'net.peer.name': '127.0.0.1',
-      'net.peer.port': 5432,
-      'db.statement.metis.plan': parsedPlan,
-    },
-  };
+      kind: 'SpanKind.CLIENT',
+      name: 'SELECT postgres',
+      links: [],
+      events: [],
+      status: {
+        status_code: 'UNSET',
+      },
+      context: {
+        span_id: span_id,
+        trace_id: traceId,
+      },
+      end_time: endDate,
+      start_time: startDate,
+      duration: 1,
+      resource: {
+        'service.name': 'api-service',
+        'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
+        'metis.sdk.name': prName,
+        'telemetry.sdk.name': 'Metis-Queries-Performance-QA-Mon-Jun-05-2023-09:38:25',
+        'telemetry.sdk.version': '1.11.1',
+        'telemetry.sdk.language': 'query-analysis',
+        'app.tag.pr': prName,
+      },
+      parent_id: null,
+      attributes: {
+        'db.system': 'postgresql',
+        'db.statement.metis': item.query,
+        'net.peer.name': '127.0.0.1',
+        'net.peer.port': 5432,
+        'db.statement.metis.plan': parsedPlan,
+      },
+    }
 };
 
 const axiosPost = async (url, body, options) => {
@@ -111,9 +162,10 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName) => {
   console.log(JSON.stringify(prName));
+
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item) => {
-      return await makeSpan(item.query, 'select', item.plan, connection, prName);
+      return await makeSpan(item, 'select', connection, prName);
     })
   );
 

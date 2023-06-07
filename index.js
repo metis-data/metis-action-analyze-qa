@@ -5,18 +5,7 @@ const axios = require('axios');
 const parse = require('pg-connection-string').parse;
 const { sendSpans } = require('./spans');
 
-let queries = [
-  'select * from  postgres_air.boarding_pass as b where passenger_id = 4484038',
-  `SELECT * FROM postgres_air.boarding_pass WHERE pass_id BETWEEN 10450000 AND 10800000 AND seat = '20C' Limit 50000`,
-  "SELECT * FROM postgres_air.account WHERE last_name = 'johns'",
-  "/* DESC: A simple query on one table. It scans the entire table as there are no relevant index. Rows Returned: 66 Rows Filtered: ~257,268 Rows Read = ~257,268 + 66 = ~257,334 Plan Type: Actual */ SELECT * FROM postgres_air.account WHERE last_name = 'johns'",
-  "SELECT * FROM postgres_air.account WHERE last_name = 'johns' limit 15",
-  "SELECT * FROM postgres_air.boarding_pass WHERE update_ts::date BETWEEN '2020-08-10' AND '2020-08-17' LIMIT 100",
-  "SELECT flight_id, scheduled_departure FROM postgres_air.flight f JOIN postgres_air.airport a ON departure_airport=airport_code AND iso_country='US'",
-];
-
 const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
-//const prName = `Metis-Queries-Performance-QA`;
 
 async function createTest(apiKey, backendUrl) {
   const body = {
@@ -35,11 +24,12 @@ async function createTest(apiKey, backendUrl) {
   }
 }
 
-async function getQueryAndPlan(client, query) {
-  const explainedQuery = 'EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, TIMING, FORMAT JSON) ' + query;
+async function getQueryAndPlan(client, query, isActual) {
+  const analyzeString = 'ANALYZE,';
+  const explainedQuery = `EXPLAIN (${isActual ? analyzeString : ''} COSTS, VERBOSE, BUFFERS, TIMING, FORMAT JSON) ${query}`;
   const explainedQueryResult = await client.query(explainedQuery);
   const plan = explainedQueryResult.rows[0]['QUERY PLAN'][0];
-  core.info(`Run query: ${query}`);
+  core.info(`Run query: ${query} in ${isActual ? 'actual mode' : 'estimated mode'}`);
   return {
     query,
     plan,
@@ -66,7 +56,7 @@ async function run() {
       Get Input Queries If Exists
     */
     if (core.getInput('queries') && core.getInput('queries') !== '[]') {
-      inputQueries = JSON.parse(core.getInput('queries')).map((item) => item.query);
+      inputQueries = JSON.parse(core.getInput('queries')).map((item) => item);
     }
     /*
       Parse connection string to object
@@ -89,16 +79,33 @@ async function run() {
     const client = await createNewClient(dbConnection);
     await connectClient(client);
 
-    const analyzedQueries = await Promise.all(
-      inputQueries.map(async (query) => {
-        const res = await getQueryAndPlan(client, query);
-        return res;
+    const actualAnalyzedQueries = await Promise.all(
+      inputQueries.map(async (item) => {
+        const res = await getQueryAndPlan(client, item.query, true);
+        return {
+          route: item?.route,
+          query: res.query,
+          plan: res.plan,
+        };
       })
     );
 
+    const estimatedAnalyzedQueries = await Promise.all(
+      inputQueries.map(async (item) => {
+        const res = await getQueryAndPlan(client, item.query, false);
+        return {
+          route: item?.route,
+          query: res.query,
+          plan: res.plan,
+        };
+      })
+    );
+
+    const queriesToBeAnalyzed = [...actualAnalyzedQueries, ...estimatedAnalyzedQueries];
+
     endClient(client);
 
-    await sendSpans(metisApikey, analyzedQueries, dbConnection, core.getInput('metis_exporter_url'), prName);
+    await sendSpans(metisApikey, queriesToBeAnalyzed, dbConnection, core.getInput('metis_exporter_url'), prName);
   } catch (error) {
     console.error(error);
     core.setFailed(error);
