@@ -26,7 +26,7 @@ async function createTest(apiKey, backendUrl) {
 
 async function getQueryAndPlan(client, query, isActual) {
   const analyzeString = 'ANALYZE,';
-  const explainedQuery = `EXPLAIN (${isActual ? analyzeString : ''} COSTS, VERBOSE, BUFFERS, TIMING, FORMAT JSON) ${query}`;
+  const explainedQuery = `EXPLAIN (${isActual ? analyzeString : ''} COSTS, VERBOSE, BUFFERS, ${isActual ? 'TIMING,' : ''} FORMAT JSON) ${query}`;
   const explainedQueryResult = await client.query(explainedQuery);
   const plan = explainedQueryResult.rows[0]['QUERY PLAN'][0];
   core.info(`Run query: ${query} in ${isActual ? 'actual mode' : 'estimated mode'}`);
