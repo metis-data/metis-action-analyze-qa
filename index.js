@@ -102,8 +102,8 @@ async function run() {
     let queriesToBeAnalyzed = [];
     actualAnalyzedQueries.map((item, idx) => {
       const traceId = uuid();
-      arr.push({...item, traceId});
-      arr.push({...estimatedAnalyzedQueries[idx], traceId});
+      queriesToBeAnalyzed.push({...item, traceId});
+      queriesToBeAnalyzed.push({...estimatedAnalyzedQueries[idx], traceId});
     });
 
     endClient(client);
