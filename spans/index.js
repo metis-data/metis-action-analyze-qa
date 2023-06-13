@@ -88,7 +88,7 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
   try {
     hostName = connection.host;
   } catch (e) {}
-  // generateServerSpan(traceId, item.route),
+
   return {
     kind: 'SpanKind.CLIENT',
     name: 'SELECT postgres',
@@ -161,12 +161,12 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute) => {
   console.log(JSON.stringify(prName));
+  console.log(core.getInput('useRoute') ? 'send query span with server span' : 'send only query span');
   let arr = [];
   const spans = await Promise.all(
-    queriesAndPlans?.map(async (item) => {
-      const traceId = uuid();
-      if (useRoute || true) {
-        arr.push(generateServerSpan(traceId, item?.route, prName));
+    queriesAndPlans?.map(async (item, idx) => {
+      if (useRoute && idx % 2 !== 0 && core.getInput('useRoute')) {
+        arr.push(generateServerSpan(item?.traceId, item?.route, prName));
       }
       return await makeSpan(item, 'select', connection, prName, traceId);
     })
