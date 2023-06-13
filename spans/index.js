@@ -5,7 +5,7 @@ const core = require('@actions/core');
 const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
   try {
     if (queriesToSend === 0) {
-      console.log('No Spans To Send');
+      core.info('No Spans To Send');
       return;
     }
     if (!apiKey) {
@@ -160,8 +160,8 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 }
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute) => {
-  console.log(JSON.stringify(prName));
-  console.log(core.getInput('useRoute') ? 'send query span with server span' : 'send only query span');
+  core.info(JSON.stringify(prName));
+  core.info(core.getInput('useRoute') ? 'send query span with server span' : 'send only query span');
   let arr = [];
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item, idx) => {

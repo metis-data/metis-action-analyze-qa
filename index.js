@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const { Client } = require('pg');
 const axios = require('axios');
-
+const { uuid } = require('uuidv4');
 const parse = require('pg-connection-string').parse;
 const { sendSpans } = require('./spans');
 
