@@ -168,7 +168,7 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
       if (useRoute && idx % 2 !== 0 && core.getInput('useRoute')) {
         arr.push(generateServerSpan(item?.traceId, item?.route, prName));
       }
-      return await makeSpan(item, 'select', connection, prName, traceId);
+      return await makeSpan(item, 'select', connection, prName, item?.traceId);
     })
   );
   core.info(JSON.stringify(arr));
