@@ -100,17 +100,17 @@ async function run() {
       })
     );
     let queriesToBeAnalyzed = [];
-    if(core.getInput('qaMode')) {
+    if (core.getInput('qaMode')) {
+      console.info('qa-mode');
       actualAnalyzedQueries.map((item, idx) => {
         const traceId = uuid();
-        queriesToBeAnalyzed.push({...item, traceId});
-        queriesToBeAnalyzed.push({...estimatedAnalyzedQueries[idx], traceId});
+        queriesToBeAnalyzed.push({ ...item, traceId });
+        queriesToBeAnalyzed.push({ ...estimatedAnalyzedQueries[idx], traceId });
       });
+    } else {
+      console.info('demo-mode');
+      queriesToBeAnalyzed = actualAnalyzedQueries;
     }
-    else {
-      queriesToBeAnalyzed = actualAnalyzedQueries
-    }
-  
 
     endClient(client);
 
