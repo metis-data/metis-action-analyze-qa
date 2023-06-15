@@ -28,6 +28,9 @@ inputs:
   useRoute:
     required: false
     description: flag that choose if to use route
+  qaMode:
+    required: false
+    description: flag that activate qa-mode
 runs:
   using: 'node16'
   main: 'index.js'
