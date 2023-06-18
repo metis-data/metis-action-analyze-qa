@@ -127,7 +127,6 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
 const axiosPost = async (url, body, options) => {
   try {
     const res = await axios.post(url, body, options);
-    console.info(res);
     core.info(`send span to backend successfully`);
     return res;
   } catch (error) {
