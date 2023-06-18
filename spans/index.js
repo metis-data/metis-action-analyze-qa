@@ -127,7 +127,7 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
 const axiosPost = async (url, body, options) => {
   try {
     const res = await axios.post(url, body, options);
-    console.info(res)
+    console.info(res);
     core.info(`send span to backend successfully`);
     return res;
   } catch (error) {
@@ -161,12 +161,13 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
 }
 
 const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute) => {
-  core.info(JSON.stringify(prName));
+  const isQaMode = core.getInput('qaMode');
+  core.info(isQaMode ? 'Qa Mode' : 'Demo Mode');
   core.info(core.getInput('useRoute') ? 'send query span with server span' : 'send only query span');
   let arr = [];
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item, idx) => {
-      if ((useRoute && idx % 2 !== 0 && core.getInput('useRoute')) || core.getInput('qaMode')) {
+      if ((useRoute && idx % 2 !== 0) || isQaMode) {
         arr.push(generateServerSpan(item?.traceId, item?.route, prName));
       }
       return await makeSpan(item, 'select', connection, prName, item?.traceId);
