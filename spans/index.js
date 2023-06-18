@@ -166,9 +166,9 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
   let arr = [];
   const spans = await Promise.all(
     queriesAndPlans?.map(async (item, idx) => {
-      if ((useRoute && idx % 2 !== 0) || isQaMode) {
+      // if ((useRoute && idx % 2 !== 0) || isQaMode) {
         arr.push(generateServerSpan(item?.traceId, item?.route, prName));
-      }
+      // }
       return await makeSpan(item, 'select', connection, prName, item?.traceId);
     })
   );
