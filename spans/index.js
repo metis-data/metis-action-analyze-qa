@@ -73,8 +73,8 @@ const generateServerSpan = (traceId, routeName, prName) => {
 const makeSpan = async (item, queryType, connection, prName, traceId) => {
   const span_id = uuid();
 
-  const duration = (item.plan && item.plan['Execution Time']) || 150;
-
+  // const duration = (item.plan && item.plan['Execution Time']) || 150;
+  const duration = 200;
   const timestamp = Date.now();
   const startDate = new Date(timestamp).toISOString();
   const endDate = new Date(timestamp + duration).toISOString();
