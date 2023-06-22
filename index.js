@@ -5,7 +5,15 @@ const { uuid } = require('uuidv4');
 const parse = require('pg-connection-string').parse;
 const { sendSpans } = require('./spans');
 
-const prName = `Metis-Queries-Performance-QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}`;
+const qaMode = core.getInput('qaMode') !== undefined
+
+const date = new Date();
+const options = { year: 'numeric', month: 'short', day: '2-digit' };
+const formattedDate = date.toLocaleDateString('en-US', options);
+
+const prName = qaMode ? `QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}` :  `Version-${formattedDate}`;
+
+
 
 async function createTest(apiKey, backendUrl) {
   const body = {
