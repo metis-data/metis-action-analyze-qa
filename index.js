@@ -14,7 +14,7 @@ const formattedDate = date.toLocaleDateString('en-US', options);
 const currentMonth = date.getMonth();
 const currentDay = date.getDay();
 const currentHours = date.getHours();
-const seconds = currentDate.getSeconds();
+const seconds = date.getSeconds();
 
 const month = currentMonth + 1;
 const prName = core.getInput('qaMode') === 'true' ? `QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}` :  `PR_version_${month}.${currentDay}.${currentHours}.${seconds}`;
