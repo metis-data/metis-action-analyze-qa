@@ -39,7 +39,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
       trace_state: '[]',
     },
     duration: 1000,
-    end_time: currentDate.setMilliseconds(currentDate.getMilliseconds() + 1000),
+    end_time: currentDate,
     resource: {
       'app.tag.pr': prName,
       'host.name': 'legal-erection.net',
@@ -73,8 +73,8 @@ const generateServerSpan = (traceId, routeName, prName) => {
 };
 
 function getRandomNumber() {
-  const min = 3000;
-  const max = 25000;
+  const min = 100000;
+  const max = 300000;
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
