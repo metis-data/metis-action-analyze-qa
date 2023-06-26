@@ -5,7 +5,7 @@ const { uuid } = require('uuidv4');
 const parse = require('pg-connection-string').parse;
 const { sendSpans } = require('./spans');
 
-const qaMode = core.getInput('qaMode') !== undefined && qaMode !== 'true'
+const qaMode = core.getInput('qaMode') !== undefined && core.getInput('qaMode') !== 'true'
 core.info(`qaMode: ${qaMode}`);
 const date = new Date();
 
