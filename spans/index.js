@@ -23,6 +23,8 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
 
 const generateServerSpan = (traceId, routeName, prName) => {
   const span_id = uuid();
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString();
   return {
     kind: 'SpanKind.SERVER',
     name: routeName,
@@ -37,7 +39,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
       trace_state: '[]',
     },
     duration: 1000,
-    end_time: '2023-06-03T19:45:02.0Z',
+    end_time: currentDate.setMilliseconds(currentDate.getMilliseconds() + 1000),
     resource: {
       'app.tag.pr': prName,
       'host.name': 'legal-erection.net',
@@ -66,7 +68,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
       'http.response.header.content_type': ['application/json'],
       'http.response.header.content_length': ['2'],
     },
-    start_time: '2023-06-03T19:45:01.0Z',
+    start_time: formattedDate,
   };
 };
 
@@ -103,7 +105,7 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
     },
     end_time: endDate,
     start_time: startDate,
-    duration: 150,
+    duration: 3031,
     resource: {
       'service.name': 'api-service',
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
