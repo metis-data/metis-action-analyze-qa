@@ -115,7 +115,7 @@ async function run() {
     );
     let queriesToBeAnalyzed = [];
 
-    if (core.getInput('qaMode')) {
+    if (core.getInput('qaMode') === 'true') {
       console.info('qa-mode');
       actualAnalyzedQueries.map((item, idx) => {
         const traceId = uuid();
