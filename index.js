@@ -5,14 +5,13 @@ const { uuid } = require('uuidv4');
 const parse = require('pg-connection-string').parse;
 const { sendSpans } = require('./spans');
 
-const qaMode = core.getInput('qaMode') !== undefined && core.getInput('qaMode') !== 'true'
-core.info(`qaMode: ${qaMode}`);
-const date = new Date();
 
+
+const date = new Date();
 const currentMonth = date.getMonth();
 const month = currentMonth + 1;
 
-const prName = qaMode ? `QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}` :  `PR_version_1.0.X-${month}`;
+const prName = core.getInput('qaMode') === 'true' ? `QA-${Date().split(' GMT')[0].replaceAll(' ', '-')}` :  `PR_version_1.0.X-${month}`;
 
 
 
