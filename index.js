@@ -88,8 +88,10 @@ async function run() {
       host: credentials.host,
       // ssl: config?.ssl || { rejectUnauthorized: false },
     };
-
-    createTest(metisApikey, core.getInput('target_url'));
+    if(core.getInput('disableSendDataToMetis') !== 'true') {
+      createTest(metisApikey, core.getInput('target_url'));
+    }
+    
     const client = await createNewClient(dbConnection);
     await connectClient(client);
 
@@ -133,7 +135,9 @@ async function run() {
 
     endClient(client);
 
+    if(core.getInput('disableSendDataToMetis') !== 'true') {
     await sendSpans(metisApikey, queriesToBeAnalyzed, dbConnection, core.getInput('metis_exporter_url'), prName, core.getInput('useRoute'));
+    }
   } catch (error) {
     console.error(error);
     core.setFailed(error);
