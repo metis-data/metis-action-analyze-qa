@@ -40,7 +40,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
       trace_id: traceId,
       trace_state: '[]',
     },
-    duration: 10000,
+    duration: 1000000,
     end_time: endDate,
     resource: {
       'app.tag.pr': prName,
