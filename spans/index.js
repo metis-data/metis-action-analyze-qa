@@ -23,7 +23,7 @@ const sendSpansToBackend = async (queriesToSend, apiKey, metisExporterUrl) => {
 
 const generateServerSpan = (traceId, routeName, prName) => {
   const span_id = uuid();
-  const duration = 1000;
+  const duration = getRandomNumber(400000, 900000);
   const timestamp = Date.now();
   const startDate = new Date(timestamp).toISOString();
   const endDate = new Date(timestamp + duration).toISOString();
@@ -40,7 +40,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
       trace_id: traceId,
       trace_state: '[]',
     },
-    duration: getRandomNumber(400000, 900000),
+    duration: duration * 100,
     end_time: endDate,
     resource: {
       'app.tag.pr': prName,
