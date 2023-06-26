@@ -72,6 +72,12 @@ const generateServerSpan = (traceId, routeName, prName) => {
   };
 };
 
+function getRandomNumber() {
+  const min = 3000;
+  const max = 25000;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const makeSpan = async (item, queryType, connection, prName, traceId) => {
   const span_id = uuid();
 
@@ -91,6 +97,7 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
     hostName = connection.host;
   } catch (e) {}
 
+
   return {
     kind: 'SpanKind.CLIENT',
     name: 'SELECT postgres',
@@ -105,7 +112,7 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
     },
     end_time: endDate,
     start_time: startDate,
-    duration: 3031,
+    duration: getRandomNumber(),
     resource: {
       'service.name': 'api-service',
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
