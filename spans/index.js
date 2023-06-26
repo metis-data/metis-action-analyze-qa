@@ -40,7 +40,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
       trace_id: traceId,
       trace_state: '[]',
     },
-    duration: 1000000,
+    duration: getRandomNumber(400000, 900000),
     end_time: endDate,
     resource: {
       'app.tag.pr': prName,
@@ -74,9 +74,7 @@ const generateServerSpan = (traceId, routeName, prName) => {
   };
 };
 
-function getRandomNumber() {
-  const min = 100000;
-  const max = 300000;
+function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -114,7 +112,7 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
     },
     end_time: endDate,
     start_time: startDate,
-    duration: getRandomNumber(),
+    duration: getRandomNumber(100000, 300000),
     resource: {
       'service.name': 'api-service',
       'metis.sdk.version': '67dee834d8b7eb0433640d45718759992dde0bb4',
