@@ -78,7 +78,7 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const makeSpan = async (item, queryType, connection, prName, traceId) => {
+const makeSpan = async (item, queryType, connection, prName, traceId, credentials) => {
   const span_id = uuid();
 
   // const duration = (item.plan && item.plan['Execution Time']) || 150;
@@ -124,10 +124,11 @@ const makeSpan = async (item, queryType, connection, prName, traceId) => {
     },
     parent_id: null,
     attributes: {
+      'db.name': credentials?.database,
       'db.system': 'postgresql',
       'db.statement.metis': item.query,
-      'net.peer.name': '127.0.0.1',
-      'net.peer.port': 5432,
+      'net.peer.name': credentials?.host,
+      'net.peer.port': credentials?.port || 5432,
       'db.statement.metis.plan': parsedPlan,
     },
   };
@@ -168,7 +169,7 @@ async function sendMultiSpans(url, apiKey, spans, prName) {
   return response;
 }
 
-const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute) => {
+const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporterUrl, prName, useRoute,credentials) => {
   const isQaMode = core.getInput('qaMode');
   core.info(isQaMode ? 'Qa Mode' : 'Demo Mode');
   core.info(core.getInput('useRoute') ? 'send query span with server span' : 'send only query span');
@@ -178,7 +179,7 @@ const sendSpans = async (metisApikey, queriesAndPlans, connection, metisExporter
       // if ((useRoute && idx % 2 !== 0) || useRoute && isQaMode && idx % 2 !== 0) {
         arr.push(generateServerSpan(item?.traceId, item?.route, prName));
       // }
-      return await makeSpan(item, 'select', connection, prName, item?.traceId);
+      return await makeSpan(item, 'select', connection, prName, item?.traceId,credentials);
     })
   );
   core.info()

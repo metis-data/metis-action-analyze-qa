@@ -136,7 +136,7 @@ async function run() {
     endClient(client);
 
     if(core.getInput('disableSendDataToMetis') !== 'true') {
-    await sendSpans(metisApikey, queriesToBeAnalyzed, dbConnection, core.getInput('metis_exporter_url'), prName, core.getInput('useRoute'));
+    await sendSpans(metisApikey, queriesToBeAnalyzed, dbConnection, core.getInput('metis_exporter_url'), prName, core.getInput('useRoute'),credentials);
     }
   } catch (error) {
     console.error(error);
