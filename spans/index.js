@@ -124,11 +124,11 @@ const makeSpan = async (item, queryType, connection, prName, traceId, credential
     },
     parent_id: null,
     attributes: {
-      'db.name': credentials?.database,
+      'db.name': 'credentials?.database',
       'db.system': 'postgresql',
       'db.statement.metis': item.query,
-      'net.peer.name': credentials?.host,
-      'net.peer.port': credentials?.port || 5432,
+      'net.peer.name': 'redentials?.host',
+      'net.peer.port':  5432,
       'db.statement.metis.plan': parsedPlan,
     },
   };
