@@ -51,7 +51,7 @@ async function getQueryAndPlan(client, query, isActual) {
 }
 
 async function createNewClient(dbConnection) {
-  const client = new Client(dbConnection);
+  const client = new Client({ connectionString: dbConnection, ssl: true });
   return client;
 }
 
