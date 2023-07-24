@@ -51,7 +51,7 @@ async function getQueryAndPlan(client, query, isActual) {
 }
 
 async function createNewClient(dbConnection) {
-  const client = new Client(`${dbConnection}?ssl=true`);
+  const client = new Client(dbConnection);
   return client;
 }
 
@@ -86,7 +86,7 @@ async function run() {
       user: credentials.user,
       password: credentials.password,
       host: credentials.host,
-      // ssl: config?.ssl || { rejectUnauthorized: false },
+      ssl: true,
     };
     if(core.getInput('disableSendDataToMetis') !== 'true') {
       createTest(metisApikey, core.getInput('target_url'));
