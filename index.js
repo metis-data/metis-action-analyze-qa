@@ -86,7 +86,9 @@ async function run() {
       user: credentials.user,
       password: credentials.password,
       host: credentials.host,
-      ssl: true,
+      ssl: {
+        rejectUnauthorized: false
+      },
     };
     if(core.getInput('disableSendDataToMetis') !== 'true') {
       createTest(metisApikey, core.getInput('target_url'));
