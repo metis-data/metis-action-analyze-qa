@@ -40,10 +40,17 @@ async function createTest(apiKey, backendUrl) {
 }
 
 async function getQueryAndPlan(client, query, isActual) {
+  let plan = undefined;
   const explainedQuery = `EXPLAIN (${isActual ? 'ANALYZE,' : ''} COSTS, VERBOSE, BUFFERS, ${isActual ? 'TIMING,' : ''} FORMAT JSON) ${query}`;
   const explainedQueryResult = await client.query(core.getInput('disableAnalyze') === 'true' ? query : explainedQuery);
-  const plan = explainedQueryResult.rows[0]['QUERY PLAN'][0];
-  core.info(`Run query: ${query} in ${isActual ? 'actual mode' : 'estimated mode'}`);
+  if(core.getInput('disableAnalyze') === 'true' ) {
+    core.info(`Run query without analyzing it`);
+  }
+  else {
+    plan = explainedQueryResult.rows[0]['QUERY PLAN'][0];
+   core.info(`Run query: ${query} in ${isActual ? 'actual mode' : 'estimated mode'}`);
+  }
+  
   return {
     query,
     plan,
