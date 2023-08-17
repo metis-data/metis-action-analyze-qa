@@ -31,7 +31,7 @@ inputs:
   qaMode:
     required: false
     description: flag that activate qa-mode
-  disableaAalyze:
+  disableAnalyze:
     required: false
     description: flag that activate qa-mode
   disableSendDataToMetis:
